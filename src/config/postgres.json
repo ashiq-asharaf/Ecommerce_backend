@@ -1,0 +1,11 @@
+{
+    "postgres": {
+      "host": "localhost",
+      "database": "postgres",
+      "user": "Check",
+      "password": "Check890",
+      "port": 5432,
+      "ssl": false
+    }
+  }
+  

@@ -18,4 +18,26 @@ const validate = (schema) => (req, res, next) => {
   return next();
 };
 
-module.exports = validate;
+function validateSchema(schema, req, next) {
+  const validationResult = schema.validate(req.body, { abortEarly: false });
+  if (!validationResult.error) {
+    req.schema = validationResult.value; // eslint-disable-line no-param-reassign
+    return next();
+  }
+  const details = [];
+  validationResult.error.details.forEach((d) => details.push(d.message));
+  const newerr = new Error(details.join());
+  newerr.code = 400;
+  newerr.name = validationResult.error.name;
+  return next(newerr);
+ 
+}
+
+function validatePublic(schema) {
+  return (req, res, next) => validateSchema(schema, req, next);
+}
+
+module.exports = {
+  validate,
+  validatePublic
+}

@@ -42,8 +42,31 @@ const getUserById = async (id) => {
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+const getUserByEmail = async (data) => {
+  const args = [];
+  const argVals = [];
+  let argCount = 1;
+
+  if ("email" in data) {
+      args.push(`l_email => $${argCount} :: text`);
+      argVals.push(data.email);
+      argCount += 1;
+    }
+
+    if ("password" in data) {
+      args.push(`l_password => $${argCount} :: text`);
+      argVals.push(data.password);
+      argCount += 1;
+    }
+
+    const response = await db.any(
+      `SELECT * FROM fn_ec_insert_update_products(${args.join(
+        ", "
+      )})`,
+      argVals
+    )
+          console.log(response);
+  return response;
 };
 
 /**
