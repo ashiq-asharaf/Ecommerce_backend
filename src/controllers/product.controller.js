@@ -8,7 +8,7 @@ const productServices = require('../services/product.service');
 const addProduct = catchAsync(async (req, res ) => {
     try {
         const data = req.body;
-        const response = await productServices.addProduct(data);
+        const response = await productServices.s_addProduct(data);
     res.status(200).send(response);
     } catch(err) {
         res.status(500).send({ status_value: "0", message:"Internal Server Error", err});
@@ -16,7 +16,19 @@ const addProduct = catchAsync(async (req, res ) => {
     
 });
 
+const getProductDetails = catchAsync(async (req, res ) => {
+    try {
+        const data = req.body;
+        const response = await productServices.s_getProductDetails(data);
+        console.log(response)
+        res.status(200).send(response);
+    } catch(err) {
+        res.status(500).send({ status_value: "0", message:"Internal Server Error", err});
+    }
+})
+
 
 module.exports = {
     addProduct,
+    getProductDetails
 }

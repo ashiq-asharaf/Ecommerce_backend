@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const db = require('../db');
 
 /**
  * Login with username and password
@@ -12,11 +13,29 @@ const { tokenTypes } = require('../config/tokens');
  * @returns {Promise<User>}
  */
 const loginUserWithEmailAndPassword = async (data) => {
-  const user = await userService.getUserByEmail(data);
-  if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+  const args = [];
+  const argVals = [];
+  let argCount = 1;
+
+  if ('email' in data) {
+    args.push(`l_email_id => $${argCount} :: text`);
+    argVals.push(data.email);
+    argCount += 1;
   }
-  return user;
+
+  if ('password' in data) {
+    args.push(`l_password => $${argCount} :: text`);
+    argVals.push(data.password);
+    argCount += 1;
+  }
+  const response = await db.any(
+    `SELECT * FROM fn_ec_member_login(${args.join(
+      ", "
+    )})`,
+    argVals
+  )
+
+  return response;
 };
 
 /**

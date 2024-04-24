@@ -65,7 +65,7 @@ const getUserByEmail = async (data) => {
       )})`,
       argVals
     )
-          console.log(response);
+         
   return response;
 };
 

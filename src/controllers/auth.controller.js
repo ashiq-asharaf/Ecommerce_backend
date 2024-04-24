@@ -10,19 +10,20 @@ const register = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await authService.loginUserWithEmailAndPassword(email, password);
-    const tokens = await tokenService.generateAuthTokens(user);
+    console.log(req.body);
+    const data = req.body;
+    const user = await authService.loginUserWithEmailAndPassword(data);
+    // const tokens = await tokenService.generateAuthTokens(user);
   
-    const access_token = tokens.access.token;
-    res.cookie('y-refresh-token', tokens.resfresh.token, {
-      httpOnly: true,
-      secure: config.env === 'develop',
-      expires: tokens.refresh.expires,
-      sameSite: 'Strict',
-    });
+    // const access_token = tokens.access.token;
+    // res.cookie('y-refresh-token', tokens.resfresh.token, {
+    //   httpOnly: true,
+    //   secure: config.env === 'develop',
+    //   expires: tokens.refresh.expires,
+    //   sameSite: 'Strict',
+    // });
   
-    res.status(200).send({ user, access_token });
+    res.status(200).send({ user });
     } catch (error) {
     res.status(403).json({ error: error.message });
     }

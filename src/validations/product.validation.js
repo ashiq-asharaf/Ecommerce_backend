@@ -16,7 +16,12 @@ const insertProduct = joi.object().keys({
     summary: joi.string().required(),
 })
 
+const getProductDetails = joi.object().keys({
+    userId: joi.number().required(),
+    category: joi.string().required()
+})
 
 module.exports = {
     insertProduct,
+    getProductDetails
 }

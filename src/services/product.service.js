@@ -5,7 +5,7 @@ const db = require('../db');
 
 
 
-const addProduct = async (data) => {
+const s_addProduct = async (data) => {
     const args = [];
     const argVals = [];
     let argCount = 1;
@@ -70,10 +70,6 @@ const addProduct = async (data) => {
         argVals.push(data.summary);
         argCount += 1;
       }
-
-      console.log(db);
-
-
     
       const response = await db.any(
         `SELECT * FROM fn_ec_insert_update_products(${args.join(
@@ -86,6 +82,30 @@ const addProduct = async (data) => {
 
 }
 
+
+const s_getProductDetails = async (data) => {
+  const args = [];
+  const argVals = [];
+  let argCount = 1;
+
+  if ('userId' in data) {
+    args.push(`l_user_id => $${argCount} :: bigint`);
+    argVals.push(data.userId);
+    argCount += 1;
+  }
+
+  if ('category' in data) {
+    args.push(`l_category => $${argCount} :: text`);
+    argVals.push(data.category);
+    argCount += 1;
+  }
+
+  const response = await db.any(`SELECT * FROM fn_ec_get_all_products(${args.join(', ')})`, argVals);
+  return response;
+};
+
+
 module.exports = {
-    addProduct,
+    s_addProduct,
+    s_getProductDetails
 }
