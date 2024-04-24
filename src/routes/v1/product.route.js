@@ -4,11 +4,12 @@ const productValidation = require('../../validations/product.validation');
 const productController = require('../../controllers/product.controller');
 // const { validate } = require('../../models/token.model');
 const router = express.Router();
+const jwt_middleware = require('../../middlewares/auth2')
 
 
 //Add product Enpoint
-router.post('/insertProduct', validatePublic(productValidation.insertProduct), productController.addProduct);
-router.post('/getProduct/men', validate(productValidation.getProductDetails), productController.getProductDetails);
+router.post('/insertProduct',jwt_middleware, validatePublic(productValidation.insertProduct), productController.addProduct);
+router.post('/getProduct/men',jwt_middleware, validate(productValidation.getProductDetails), productController.getProductDetails);
 
 
 module.exports = router;
