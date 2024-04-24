@@ -4,7 +4,7 @@ const { tokenTypes } = require('./tokens');
 const { User } = require('../models');
 
 const jwtOptions = {
-  secretOrKey: config.jwt_secret,
+  secretOrKey: config.jwtSecret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 

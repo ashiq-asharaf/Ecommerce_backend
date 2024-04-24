@@ -9,11 +9,24 @@ const register = catchAsync(async (req, res) => {
 });
 
 const login = catchAsync(async (req, res) => {
-  // const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(req.body);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
-});
+  try {
+    const { email, password } = req.body;
+    const user = await authService.loginUserWithEmailAndPassword(email, password);
+    const tokens = await tokenService.generateAuthTokens(user);
+  
+    const access_token = tokens.access.token;
+    res.cookie('y-refresh-token', tokens.resfresh.token, {
+      httpOnly: true,
+      secure: config.env === 'develop',
+      expires: tokens.refresh.expires,
+      sameSite: 'Strict',
+    });
+  
+    res.status(200).send({ user, access_token });
+    } catch (error) {
+    res.status(403).json({ error: error.message });
+    }
+  });
 
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
